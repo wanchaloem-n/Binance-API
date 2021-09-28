@@ -1,0 +1,22 @@
+# !pip install python-binance
+from binance.client import Client
+
+def check_api(api_key,api_secret,testnet):
+    try:
+        client = Client(api_key=api_key, api_secret=api_secret,testnet=testnet)
+        USDT=client.get_asset_balance(asset="USDT")['free']
+        info=client.get_account()
+        permissions='SPOT' in info['permissions']
+        canTrade=str(info['canTrade']).lower()=="true"
+        system_status=client.get_system_status()
+        system_status=(system_status["status"]==0) and (system_status["msg"].lower()=="normal")
+        res={"USDT":USDT,"canTrade":permissions and canTrade and system_status}
+        return res
+    except Exception as e:
+        print(str(e))
+        return {"USDT":0,"canTrade":False}
+
+api_key= 'dNYZvurhuUInWuMO7JnqSn1BMjb2IXc2H'
+api_secret= 'rnZRt2TXIfKPaeyBXmNYd8FILFNj'
+testnet=True
+check_api(api_key,api_secret,testnet)
