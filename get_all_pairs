@@ -1,0 +1,17 @@
+def get_all_pairs(api_key,api_secret,testnet):
+    try:
+        testnet=(testnet=="T")
+        client = Client(api_key, api_secret)
+        exchange_info = client.get_exchange_info()
+        pairs=[]
+        for s in exchange_info['symbols']:
+            if s['symbol'][-4:]=="USDT" and ("MARKET" in s['orderTypes']) and  (s['status'].upper()== 'TRADING'):
+                pairs.append(s['symbol'])
+        return list(set(pairs))
+    except Exception as e:
+        print(str(e))
+        return []
+api_key= 'dNYZvurhuUInWuMO7JnqSn1BMjb2IXc2HgNuf'
+api_secret= 'rnZRt2TXIfKPaeyBXmNYd8FILF'
+testnet="T"
+get_all_pairs(api_key,api_secret,testnet)
